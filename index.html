@@ -29,25 +29,25 @@
 
     .cat {
       position: absolute;
-      width: 100px;
+      width: 72px;
       opacity: 0.2;
+      z-index: 0;
     }
-    .cat.left { top: 10%; left: 0; transform: scaleX(-1); }
-    .cat.right { bottom: 10%; right: 0; }
 
     h1 {
-      font-size: clamp(2rem, 5vw, 3rem); /* responsive size */
+      font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
       text-shadow: 1px 1px 2px #fff;
-      line-height: 1.4;
-      white-space: pre-line;
+      line-height: 1.1;
       font-weight: 600;
       margin-bottom: 20px;
+      z-index: 1;
     }
 
     #countdown, #message {
       font-size: 1.8rem;
       margin-top: 10px;
+      z-index: 1;
     }
 
     .time-part {
@@ -55,12 +55,14 @@
       margin: 0 12px;
       min-width: 60px;
     }
+
     .time-part span {
       display: block;
       font-size: 2.2rem;
       font-weight: bold;
       color: #c81e6b;
     }
+
     .label {
       font-size: 0.8rem;
       color: #555;
@@ -69,17 +71,21 @@
 </head>
 <body>
 
-  <!-- Mèo trang trí -->
-  <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" alt="cat" class="cat left" />
-  <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" alt="cat" class="cat right" />
+  <!-- Mèo khắp nơi -->
+  <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" class="cat" style="top: 5%; left: 0;" />
+  <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" class="cat" style="bottom: 5%; right: 0;" />
+  <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" class="cat" style="top: 50%; left: 5%;" />
+  <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" class="cat" style="bottom: 50%; right: 5%;" />
+  <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" class="cat" style="top: 10%; right: 30%;" />
+  <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" class="cat" style="bottom: 10%; left: 30%;" />
 
   <!-- Tiêu đề -->
   <h1>
-    Chúc mừng sinh nhật<br>
-    Linh (Sinn) 🎉🎂
+    <div>Chúc mừng sinh nhật</div>
+    <div>Linh (Sinn) 🎉🎂</div>
   </h1>
 
-  <!-- Đếm ngược -->
+  <!-- Countdown -->
   <div id="countdown">
     <div class="time-part"><span id="days">0</span><div class="label">Ngày</div></div>
     <div class="time-part"><span id="hours">00</span><div class="label">Giờ</div></div>
@@ -87,7 +93,7 @@
     <div class="time-part"><span id="seconds">00</span><div class="label">Giây</div></div>
   </div>
 
-  <!-- Lời chúc ngày 4/8 -->
+  <!-- Lời chúc hiển thị riêng vào ngày 4/8 -->
   <div id="message" style="display:none; font-size:2rem; color:#d6336c; margin-top:20px;">
     Chúc mừng sinh nhật Linh 🎉🎂
   </div>
@@ -98,6 +104,7 @@
       const month = now.getMonth();
       const date = now.getDate();
 
+      // Nếu là 4/8 thì chỉ hiện lời chúc, không đếm ngược
       if (month === 7 && date === 4) {
         document.getElementById('countdown').style.display = 'none';
         document.getElementById('message').style.display = 'block';
@@ -106,7 +113,7 @@
 
       const year = now.getFullYear();
       const targetYear = (month < 7 || (month === 7 && date < 4)) ? year : year + 1;
-      const target = new Date(targetYear, 7, 4, 0, 0, 0);
+      const target = new Date(targetYear, 7, 4, 0, 0, 0); // 4/8 lúc 0h
 
       const diff = target - now;
       const totalSec = Math.floor(diff / 1000);
