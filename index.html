@@ -72,20 +72,12 @@
       position: fixed;
       background: url('https://twemoji.maxcdn.com/v/latest/svg/2764.svg') no-repeat center;
       background-size: contain;
-      animation: fall 2s linear forwards;
+      animation: fall 2.5s linear forwards;
       z-index: 1000;
     }
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
       100% { transform: translateY(100vh); opacity: 0; }
-    }
-    .cat {
-      width: 48px;
-      height: 48px;
-      position: absolute;
-      z-index: 0;
-      opacity: 0.9;
-      pointer-events: none;
     }
   </style>
 </head>
@@ -138,29 +130,19 @@
       createHearts();
       setTimeout(() => {
         popup.style.display = "none";
-      }, 4000);
+      }, 7000);
     }
 
     function createHearts() {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 50; i++) {
         const heart = document.createElement("div");
         heart.classList.add("heart");
         heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "-20px";
+        heart.style.animationDuration = (2 + Math.random() * 2) + "s";
         document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 2000);
+        setTimeout(() => heart.remove(), 3000);
       }
-    }
-
-    // Add cats randomly
-    const numCats = 12;
-    for (let i = 0; i < numCats; i++) {
-      const img = document.createElement("img");
-      img.src = "https://twemoji.maxcdn.com/v/latest/72x72/1f431.png";
-      img.alt = "cat";
-      img.className = "cat";
-      img.style.top = Math.random() * 90 + "%";
-      img.style.left = Math.random() * 90 + "%";
-      document.body.appendChild(img);
     }
   </script>
 </body>
