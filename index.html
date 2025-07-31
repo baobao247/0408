@@ -19,6 +19,7 @@
       overflow-x: hidden;
       position: relative;
     }
+
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
@@ -26,11 +27,13 @@
       text-shadow: 1px 1px 2px #fff;
       text-align: center;
     }
+
     #countdown {
       font-size: 1.8rem;
       margin: 20px 0;
       color: #ff1493;
     }
+
     button {
       background-color: #ff66a3;
       border: none;
@@ -43,9 +46,11 @@
       box-shadow: 2px 2px 8px #999;
       transition: background-color 0.3s;
     }
+
     button:hover {
       background-color: #ff3385;
     }
+
     .popup {
       position: fixed;
       top: 50%;
@@ -60,14 +65,28 @@
       display: none;
       z-index: 1001;
       text-align: center;
+      opacity: 0;
     }
-    .popup.animate {
-      animation: popFade 0.6s ease-in-out;
+
+    .popup.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out forwards;
     }
-    @keyframes popFade {
-      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+    .popup.hide {
+      animation: fadeOut 0.5s ease-out forwards;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      to { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    }
+
     .heart {
       width: 20px;
       height: 20px;
@@ -77,6 +96,7 @@
       animation: fall 2.5s linear forwards;
       z-index: 1000;
     }
+
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
       100% { transform: translateY(100vh); opacity: 0; }
@@ -93,9 +113,7 @@
     function getNextBirthday() {
       const now = new Date();
       let target = new Date(now.getFullYear(), 7, 4); // 4/8
-      if (now > target) {
-        target.setFullYear(target.getFullYear() + 1);
-      }
+      if (now > target) target.setFullYear(target.getFullYear() + 1);
       return target;
     }
 
@@ -125,22 +143,23 @@
     updateCountdown();
 
     let popupTimeout;
+    let isShowing = false;
 
     function showPopup() {
       const popup = document.getElementById("popup");
 
-      // Nếu popup chưa hiển thị -> hiện + chạy animation
-      if (popup.style.display !== "block") {
-        popup.style.display = "block";
-        popup.classList.add("animate");
-        setTimeout(() => popup.classList.remove("animate"), 600); // remove animation class
+      if (!isShowing) {
+        popup.classList.remove("hide");
+        popup.classList.add("show");
+        isShowing = true;
       }
 
-      // Reset thời gian đóng popup về 7s
       clearTimeout(popupTimeout);
       popupTimeout = setTimeout(() => {
-        popup.style.display = "none";
-      }, 7000);
+        popup.classList.remove("show");
+        popup.classList.add("hide");
+        isShowing = false;
+      }, 5000);
 
       createHearts();
     }
