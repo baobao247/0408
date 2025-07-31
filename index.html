@@ -4,13 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chúc mừng sinh nhật Linh 🎉🎂</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       background-color: #ffe4ec;
       color: #333;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Fredoka', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -27,15 +32,17 @@
       width: 100px;
       opacity: 0.2;
     }
-    .cat.left  { top: 10%; left: 0;  transform: scaleX(-1); }
+    .cat.left { top: 10%; left: 0; transform: scaleX(-1); }
     .cat.right { bottom: 10%; right: 0; }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
+      font-size: clamp(2rem, 5vw, 3rem); /* responsive size */
       color: #d6336c;
       text-shadow: 1px 1px 2px #fff;
-      line-height: 1.2;
+      line-height: 1.4;
+      white-space: pre-line;
+      font-weight: 600;
+      margin-bottom: 20px;
     }
 
     #countdown, #message {
@@ -62,20 +69,25 @@
 </head>
 <body>
 
+  <!-- Mèo trang trí -->
   <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" alt="cat" class="cat left" />
   <img src="https://twemoji.maxcdn.com/v/latest/72x72/1f431.png" alt="cat" class="cat right" />
 
+  <!-- Tiêu đề -->
   <h1>
     Chúc mừng sinh nhật<br>
-    &emsp;&emsp;Linh (Sinn)🎉🎂
+    Linh (Sinn) 🎉🎂
   </h1>
 
+  <!-- Đếm ngược -->
   <div id="countdown">
     <div class="time-part"><span id="days">0</span><div class="label">Ngày</div></div>
     <div class="time-part"><span id="hours">00</span><div class="label">Giờ</div></div>
     <div class="time-part"><span id="minutes">00</span><div class="label">Phút</div></div>
     <div class="time-part"><span id="seconds">00</span><div class="label">Giây</div></div>
   </div>
+
+  <!-- Lời chúc ngày 4/8 -->
   <div id="message" style="display:none; font-size:2rem; color:#d6336c; margin-top:20px;">
     Chúc mừng sinh nhật Linh 🎉🎂
   </div>
@@ -83,7 +95,7 @@
   <script>
     function updateCountdown() {
       const now = new Date();
-      const month = now.getMonth(); // 0-11
+      const month = now.getMonth();
       const date = now.getDate();
 
       if (month === 7 && date === 4) {
@@ -105,8 +117,8 @@
       const hr = totalH % 24;
       const days = Math.floor(totalH / 24);
 
-      document.getElementById('days').textContent    = days;
-      document.getElementById('hours').textContent   = hr.toString().padStart(2, '0');
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = hr.toString().padStart(2, '0');
       document.getElementById('minutes').textContent = min.toString().padStart(2, '0');
       document.getElementById('seconds').textContent = sec.toString().padStart(2, '0');
     }
