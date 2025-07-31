@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sinh nhật Linh (Sinn)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet" />
   <style>
     body {
       margin: 0;
       padding: 0;
       background-color: #ffe6f0;
-      background-image: url('https://i.imgur.com/1W2G0Zh.png');
-      background-repeat: repeat;
-      background-size: 80px;
-      background-attachment: fixed;
       font-family: 'Patrick Hand', cursive;
       display: flex;
       flex-direction: column;
@@ -24,129 +21,158 @@
     }
 
     h1 {
-      font-size: 36px;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: #d6336c;
+      margin: 0.2em 0;
+      text-shadow: 1px 1px 2px #fff;
       text-align: center;
-      margin-bottom: 10px;
     }
 
     #countdown {
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 20px;
+      font-size: 1.8rem;
+      margin: 20px 0;
+      color: #ff1493;
     }
 
     button {
-      padding: 12px 24px;
-      font-size: 20px;
-      font-weight: bold;
-      background-color: #ff66b2;
-      color: white;
+      background-color: #ff66a3;
       border: none;
-      border-radius: 8px;
+      color: white;
+      padding: 12px 20px;
+      font-size: 1.3rem;
+      border-radius: 12px;
       cursor: pointer;
-      margin-top: 10px;
+      font-weight: bold;
+      box-shadow: 2px 2px 8px #999;
       transition: background-color 0.3s;
     }
 
     button:hover {
-      background-color: #ff3399;
+      background-color: #ff3385;
     }
 
-    #popup {
+    .popup {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-color: #fff0f5;
-      border: 2px solid #ff66b2;
-      border-radius: 12px;
-      padding: 30px 40px;
-      font-size: 26px;
+      background: #fff0f5;
+      color: #d6336c;
+      border: 2px solid #ff99cc;
+      padding: 25px;
+      border-radius: 20px;
+      font-size: 1.8rem;
+      display: none;
+      z-index: 1001;
       text-align: center;
-      z-index: 999;
       opacity: 0;
-      pointer-events: none;
-      transition: opacity 1s ease;
     }
 
-    #popup.show {
-      opacity: 1;
-      pointer-events: auto;
+    .popup.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .popup.hide {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      to { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
     }
 
     .heart {
+      width: 20px;
+      height: 20px;
       position: fixed;
-      color: red;
-      font-size: 24px;
-      animation: fall 3s linear forwards;
-      z-index: 998;
+      background: url('https://twemoji.maxcdn.com/v/latest/svg/2764.svg') no-repeat center;
+      background-size: contain;
+      animation: fall 2.5s linear forwards;
+      z-index: 1000;
     }
 
     @keyframes fall {
-      0% {
-        transform: translateY(-20px) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) scale(1.5);
-        opacity: 0;
-      }
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <h1>Sinh nhật Hoàng Linh (Sinn) 🎉🎂</h1>
+  <h1>Sinh nhật Hoàng Linh (Sin)🎉🎂</h1>
   <div id="countdown"></div>
   <button onclick="showPopup()">Chúc mừng 🎉🎂</button>
-  <div id="popup">Chúc mừng sinh nhật Linhh 🎉🎂</div>
+  <div class="popup" id="popup">Chúc mừng sinh nhật Linhh 🎉🎂</div>
 
   <script>
+    function getNextBirthday() {
+      const now = new Date();
+      let target = new Date(now.getFullYear(), 7, 4); // 4/8
+      if (now > target) target.setFullYear(target.getFullYear() + 1);
+      return target;
+    }
+
     function updateCountdown() {
       const now = new Date();
-      const year = now.getMonth() >= 7 ? now.getFullYear() + 1 : now.getFullYear(); // sau 4/8 thì đếm đến năm sau
-      const birthday = new Date(`${year}-08-04T00:00:00`);
-      const nextDay = new Date(`${year}-08-05T00:00:00`);
+      const target = getNextBirthday();
 
-      if (now >= birthday && now < nextDay) {
-        document.getElementById("countdown").innerText = "Chúc mừng sinh nhật Linh (Sinn) 🎉🎂";
-      } else {
-        const diff = birthday - now;
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-        document.getElementById("countdown").innerText =
-          `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+      const isBirthday = now.getMonth() === 7 && now.getDate() === 4;
+      const countdown = document.getElementById("countdown");
+
+      if (isBirthday) {
+        countdown.textContent = "Chúc mừng sinh nhật Linh 🎉🎂";
+        return;
       }
+
+      const diff = target - now;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      countdown.textContent =
+        `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
     }
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
     let popupTimeout;
+    let isShowing = false;
 
     function showPopup() {
       const popup = document.getElementById("popup");
-      popup.classList.add("show");
 
-      // reset timeout nếu đang bật
+      if (!isShowing) {
+        popup.classList.remove("hide");
+        popup.classList.add("show");
+        isShowing = true;
+      }
+
       clearTimeout(popupTimeout);
       popupTimeout = setTimeout(() => {
         popup.classList.remove("show");
+        popup.classList.add("hide");
+        isShowing = false;
       }, 5000);
 
-      // tạo hiệu ứng tim rơi
-      for (let i = 0; i < 30; i++) {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerText = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = (Math.random() * 20 + 16) + "px";
-        document.body.appendChild(heart);
+      createHearts();
+    }
 
-        setTimeout(() => {
-          heart.remove();
-        }, 3000);
+    function createHearts() {
+      for (let i = 0; i < 50; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "-20px";
+        heart.style.animationDuration = (2 + Math.random() * 2) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
       }
     }
   </script>
