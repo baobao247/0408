@@ -3,213 +3,184 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sinh nhật Linh</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <title>Sinh nhật Linh (Sinn)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <style>
-    * {margin: 0; padding: 0; box-sizing: border-box;}
-
     body {
-      background-color: #ffe4ec;
-      color: #333;
-      font-family: 'Fredoka', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffe6f0;
+      font-family: 'Pacifico', cursive;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-      text-align: center;
-      position: relative;
+      height: 100vh;
       overflow: hidden;
+      position: relative;
     }
 
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
       text-shadow: 1px 1px 2px #fff;
-      font-weight: 600;
       margin-bottom: 20px;
-      z-index: 1;
+      text-align: center;
     }
 
     #countdown {
-      font-size: 1.8rem;
-      margin-top: 10px;
-      z-index: 1;
-    }
-
-    .time-part {
-      display: inline-block;
-      margin: 0 12px;
-      min-width: 60px;
-    }
-
-    .time-part span {
-      display: block;
-      font-size: 2.2rem;
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 30px;
       font-weight: bold;
-      color: #c81e6b;
+      background-color: #fff0f5;
+      padding: 10px 20px;
+      border-radius: 12px;
     }
 
-    .label {
-      font-size: 0.8rem;
-      color: #555;
+    button {
+      font-size: 1.3rem;
+      padding: 10px 20px;
+      background-color: #ff66b2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff3385;
     }
 
     .cat {
       position: absolute;
-      width: 60px;
-      opacity: 0.2;
-      z-index: 0;
+      width: 50px;
+      height: 50px;
+      pointer-events: none;
     }
 
-    #message {
-      display: none;
-      font-size: 2rem;
-      color: #d6336c;
-      margin-top: 20px;
-    }
-
-    button {
-      margin-top: 30px;
-      font-size: 1.3rem;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      background-color: #f06292;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 1;
-    }
-
+    /* Popup */
     .popup {
-      display: none;
       position: fixed;
-      top: 30%;
+      top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border: 2px solid #f06292;
+      transform: translate(-50%, -50%) scale(0.7);
+      background-color: #fff0f5;
+      border: 2px solid #ff99cc;
       border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 0 10px #f06292;
-      z-index: 999;
-    }
-
-    .popup h2 {
+      padding: 30px 40px;
       font-size: 1.8rem;
-      color: #c2185b;
+      color: #d6336c;
+      text-align: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: 0.4s ease;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      animation: popUp 0.5s ease forwards;
     }
 
+    @keyframes popUp {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    /* Heart fall */
     .heart {
-      position: fixed;
-      width: 24px;
-      height: 24px;
-      background-image: url('https://twemoji.maxcdn.com/v/latest/72x72/2764.png');
-      background-size: cover;
+      position: absolute;
+      color: red;
+      font-size: 24px;
       animation: fall 3s linear infinite;
-      z-index: 1000;
+      pointer-events: none;
     }
 
     @keyframes fall {
-      0% {transform: translateY(-100px) rotate(0);}
-      100% {transform: translateY(100vh) rotate(360deg);}
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
-
   <h1>Sinh nhật Hoàng Linh (Sinn) 🎉🎂</h1>
-
-  <!-- Countdown -->
-  <div id="countdown">
-    <div class="time-part"><span id="days">0</span><div class="label">Ngày</div></div>
-    <div class="time-part"><span id="hours">00</span><div class="label">Giờ</div></div>
-    <div class="time-part"><span id="minutes">00</span><div class="label">Phút</div></div>
-    <div class="time-part"><span id="seconds">00</span><div class="label">Giây</div></div>
-  </div>
-
-  <!-- Nút chúc mừng -->
+  <div id="countdown"></div>
   <button onclick="showPopup()">Chúc mừng 🎉🎂</button>
-
-  <!-- Popup chúc mừng -->
-  <div class="popup" id="popup">
-    <h2>Chúc mừng sinh nhật Linhh 🎉🎂</h2>
+  <div id="popup" class="popup" style="display: none;">
+    Chúc mừng sinh nhật Linhh 🎉🎂
   </div>
 
-  <!-- Hiển thị riêng ngày 4/8 -->
-  <div id="message">Chúc mừng sinh nhật Linh 🎉🎂</div>
-
-  <!-- 12 mèo đều khắp -->
+  <!-- Mèo rải đều -->
   <script>
-    const catPositions = [
-      { top: '5%', left: '5%' }, { top: '5%', right: '5%' },
-      { top: '15%', left: '40%' }, { top: '30%', right: '10%' },
-      { top: '50%', left: '20%' }, { top: '50%', right: '20%' },
-      { bottom: '30%', left: '10%' }, { bottom: '15%', right: '40%' },
-      { bottom: '5%', left: '5%' }, { bottom: '5%', right: '5%' },
-      { top: '20%', right: '25%' }, { bottom: '20%', left: '25%' }
-    ];
+    for (let i = 0; i < 12; i++) {
+      const img = document.createElement("img");
+      img.src = "https://twemoji.maxcdn.com/v/latest/72x72/1f431.png";
+      img.className = "cat";
+      img.style.top = Math.random() * 90 + "%";
+      img.style.left = Math.random() * 90 + "%";
+      document.body.appendChild(img);
+    }
+  </script>
 
-    catPositions.forEach(pos => {
-      const cat = document.createElement('img');
-      cat.src = "https://twemoji.maxcdn.com/v/latest/72x72/1f431.png";
-      cat.className = "cat";
-      Object.assign(cat.style, pos);
-      document.body.appendChild(cat);
-    });
-
+  <!-- Countdown logic -->
+  <script>
     function updateCountdown() {
       const now = new Date();
-      const month = now.getMonth();
-      const date = now.getDate();
+      const year = now.getMonth() === 7 && now.getDate() >= 5 ? now.getFullYear() + 1 : now.getFullYear();
+      const birthday = new Date(`${year}-08-04T00:00:00`);
 
-      if (month === 7 && date === 4) {
-        document.getElementById('countdown').style.display = 'none';
-        document.getElementById('message').style.display = 'block';
-        return;
+      if (now.getMonth() === 7 && now.getDate() === 4) {
+        document.getElementById("countdown").innerText = "Chúc mừng sinh nhật Linh 🎉🎂";
+      } else {
+        const diff = birthday - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        document.getElementById("countdown").innerText =
+          `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
       }
-
-      const year = now.getFullYear();
-      const targetYear = (month < 7 || (month === 7 && date < 4)) ? year : year + 1;
-      const target = new Date(targetYear, 7, 4, 0, 0, 0);
-
-      const diff = target - now;
-      const totalSec = Math.floor(diff / 1000);
-      const sec = totalSec % 60;
-      const totalMin = Math.floor(totalSec / 60);
-      const min = totalMin % 60;
-      const totalH = Math.floor(totalMin / 60);
-      const hr = totalH % 24;
-      const days = Math.floor(totalH / 24);
-
-      document.getElementById('days').textContent = days;
-      document.getElementById('hours').textContent = hr.toString().padStart(2, '0');
-      document.getElementById('minutes').textContent = min.toString().padStart(2, '0');
-      document.getElementById('seconds').textContent = sec.toString().padStart(2, '0');
     }
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-
-    function showPopup() {
-      const popup = document.getElementById('popup');
-      popup.style.display = 'block';
-      setTimeout(() => { popup.style.display = 'none'; }, 4000);
-
-      // Tạo hiệu ứng tim rơi
-      for (let i = 0; i < 30; i++) {
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = 2 + Math.random() * 2 + 's';
-        document.body.appendChild(heart);
-
-        setTimeout(() => { heart.remove(); }, 4000);
-      }
-    }
   </script>
 
+  <!-- Popup logic + heart rain -->
+  <script>
+    function showPopup() {
+      const popup = document.getElementById("popup");
+      popup.style.display = "block";
+
+      // Create falling hearts
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
+        heart.style.fontSize = Math.random() * 10 + 16 + "px";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 4000);
+      }
+
+      setTimeout(() => {
+        popup.style.display = "none";
+      }, 4000);
+    }
+  </script>
 </body>
 </html>
