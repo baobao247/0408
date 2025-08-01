@@ -19,7 +19,6 @@
       overflow-x: hidden;
       position: relative;
     }
-
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
@@ -29,11 +28,36 @@
       z-index: 2;
     }
 
-    #countdown {
-      font-size: 1.8rem;
+    /* COUNTDOWN KHUNG */
+    .countdown-container {
+      display: flex;
+      gap: 12px;
       margin: 20px 0;
-      color: #ff1493;
       z-index: 2;
+    }
+    .time-box {
+      border: 2px solid #ff1493;
+      border-radius: 12px;
+      padding: 15px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 70px;
+      background-color: #ffe6f0;
+      box-shadow: 0 2px 6px rgba(255, 20, 147, 0.3);
+    }
+    .time-box .number {
+      font-size: 2.4rem;
+      font-weight: bold;
+      color: #d6336c;
+      line-height: 1;
+    }
+    .time-box .label {
+      margin-top: 6px;
+      font-size: 1rem;
+      color: #ff1493;
+      font-weight: 600;
+      user-select: none;
     }
 
     button {
@@ -49,7 +73,6 @@
       transition: background-color 0.3s;
       z-index: 2;
     }
-
     button:hover {
       background-color: #ff3385;
     }
@@ -70,21 +93,17 @@
       text-align: center;
       opacity: 0;
     }
-
     .popup.show {
       display: block;
       animation: fadeIn 0.5s ease-out forwards;
     }
-
     .popup.hide {
       animation: fadeOut 0.5s ease-out forwards;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
       to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
-
     @keyframes fadeOut {
       from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
       to { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
@@ -98,9 +117,8 @@
       background-size: contain;
       animation: fall 2.5s linear forwards;
       z-index: 1000;
-      pointer-events: none; /* Thêm dòng này để không chặn click */
+      pointer-events: none;
     }
-
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
       100% { transform: translateY(100vh); opacity: 0; }
@@ -112,7 +130,7 @@
       z-index: 1;
       width: 42px;
       height: 42px;
-      opacity: 0.14;     /* mờ để không che nội dung */
+      opacity: 0.14;
       pointer-events: none;
       user-select: none;
       transition: transform 0.5s;
@@ -121,7 +139,24 @@
 </head>
 <body>
   <h1>Sinh nhật Hoàng Linh (Sin)🎉🎂</h1>
-  <div id="countdown"></div>
+  <div id="countdown" class="countdown-container">
+    <div class="time-box">
+      <div class="number" id="days">0</div>
+      <div class="label">Ngày</div>
+    </div>
+    <div class="time-box">
+      <div class="number" id="hours">0</div>
+      <div class="label">Giờ</div>
+    </div>
+    <div class="time-box">
+      <div class="number" id="minutes">0</div>
+      <div class="label">Phút</div>
+    </div>
+    <div class="time-box">
+      <div class="number" id="seconds">0</div>
+      <div class="label">Giây</div>
+    </div>
+  </div>
   <button onclick="showPopup()">Chúc mừng 🎉🎂</button>
   <div class="popup" id="popup">Chúc mừng sinh nhật Linhh 🎉🎂</div>
 
@@ -138,11 +173,13 @@
       const target = getNextBirthday();
 
       const isBirthday = now.getMonth() === 7 && now.getDate() === 4;
-      const countdown = document.getElementById("countdown");
+      const ctn = document.getElementById("countdown");
 
       if (isBirthday) {
-        countdown.textContent = "Chúc mừng sinh nhật Linh 🎉🎂";
+        ctn.style.display = 'none';   // ẩn countdown khi đúng ngày sinh nhật
         return;
+      } else {
+        ctn.style.display = 'flex';   // hiện lại nếu không phải ngày sinh nhật
       }
 
       const diff = target - now;
@@ -151,8 +188,10 @@
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
 
-      countdown.textContent =
-        `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+      document.getElementById("seconds").textContent = seconds;
     }
 
     setInterval(updateCountdown, 1000);
@@ -177,7 +216,7 @@
         isShowing = false;
         setTimeout(() => {
           if (!isShowing) popup.style.display = "none";
-        }, 500); // 500ms khớp với animation fadeOut
+        }, 500);
       }, 5000);
 
       popup.style.display = "block";
