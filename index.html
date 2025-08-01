@@ -25,9 +25,18 @@
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
-      margin: 0.2em 0;
+      margin: 0.2em 0 0 0;
       text-shadow: 1px 1px 2px #fff;
       text-align: center;
+      z-index: 2;
+    }
+    #birthday-date {
+      color: #d6336c;
+      font-size: 1.2rem;
+      margin-top: -6px;
+      font-family: 'Patrick Hand', cursive;
+      text-align: center;
+      user-select: none;
       z-index: 2;
     }
 
@@ -176,6 +185,7 @@
 </head>
 <body>
   <h1>Sinh nhật Hoàng Linh (Sin)🎉🎂</h1>
+  <p id="birthday-date">...</p>
 
   <div id="countdown" class="countdown-container">
     <div class="time-box"><div class="number" id="days">0</div><div class="label">Ngày</div></div>
@@ -192,26 +202,58 @@
   <audio id="clickSound" src="https://github.com/baobao247/0408/raw/refs/heads/main/happy-birthday-to-you-bossa-nova-style-arrangement-21399.mp3" preload="auto"></audio>
 
   <script>
-    function getNextBirthday() {
-      const now = new Date();
-      let target = new Date(now.getFullYear(), 7, 4);
-      if (now > target) target.setFullYear(target.getFullYear() + 1);
-      return target;
+    // Trả về đối tượng {target, year} hoặc null nếu đang trong ngày sinh nhật
+    function getNextBirthdayTarget(now) {
+      const currentYear = now.getFullYear();
+
+      const birthdayStart = new Date(currentYear, 7, 4, 0, 0, 0);  // 4/8 00:00
+      const birthdayEnd = new Date(currentYear, 7, 5, 0, 0, 0);    // 5/8 00:00
+
+      if (now < birthdayStart) {
+        return { target: birthdayStart, year: currentYear };
+      } else if (now >= birthdayStart && now < birthdayEnd) {
+        // Trong ngày sinh nhật 4/8 tạm ngưng đếm ngược, trả về null
+        return null;
+      } else {
+        // Sau 0h 5/8 đếm tới 4/8 năm kế tiếp
+        return { target: new Date(currentYear + 1, 7, 4, 0, 0, 0), year: currentYear + 1 };
+      }
     }
 
     function updateCountdown() {
       const now = new Date();
-      const target = getNextBirthday();
-      const isBirthday = now.getMonth() === 7 && now.getDate() === 4;
       const ctn = document.getElementById("countdown");
+      const birthdayDateElem = document.getElementById("birthday-date");
 
-      if (isBirthday) {
-        ctn.style.display = 'none';
+      const result = getNextBirthdayTarget(now);
+
+      if (result === null) {
+        // Đang trong ngày 4/8
+        ctn.style.display = "none";
+        if (birthdayDateElem) {
+          birthdayDateElem.textContent = `04/08/${now.getFullYear()}`;
+        }
         return;
       }
-      ctn.style.display = 'flex';
+
+      if (!result) return;
+
+      const { target, year } = result;
+
+      if (birthdayDateElem) {
+        birthdayDateElem.textContent = `04/08/${year}`;
+      }
+      ctn.style.display = "flex";
 
       const diff = target - now;
+      if (diff <= 0) {
+        document.getElementById("days").textContent = 0;
+        document.getElementById("hours").textContent = 0;
+        document.getElementById("minutes").textContent = 0;
+        document.getElementById("seconds").textContent = 0;
+        return;
+      }
+
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
@@ -222,13 +264,13 @@
       document.getElementById("minutes").textContent = minutes;
       document.getElementById("seconds").textContent = seconds;
     }
+
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
     let popupTimeout;
     let isShowing = false;
 
-    // Tạo 1 tim rơi đơn lẻ
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -239,12 +281,10 @@
       setTimeout(() => heart.remove(), 3000);
     }
 
-    // Tim nền rơi liên tục, tạo tim mỗi 100ms
     function startHeartsRain() {
       setInterval(createHeart, 100);
     }
 
-    // Tạo nhiều tim trong 2s, mặc định 100 tim
     function createManyHearts(count = 100) {
       for (let i = 0; i < count; i++) {
         const delay = Math.random() * 2000;
@@ -252,7 +292,6 @@
       }
     }
 
-    // Hiệu ứng hoa rơi ngày sinh nhật
     function createFlower() {
       const flower = document.createElement("div");
       flower.textContent = "🌸";
@@ -276,7 +315,6 @@
       setInterval(createFlower, 300);
     }
 
-    // Icon mèo nền mờ rải đều
     const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
     function addCatIconsToBackground(count = 32) {
       document.querySelectorAll('.cat-bg-icon').forEach(e => e.remove());
@@ -314,16 +352,13 @@
       }, 5000);
       popup.style.display = "block";
 
-      // Tạo nhiều tim rơi khi bấm nút
       createManyHearts(100);
 
-      // Hiệu ứng bounce nút
       button.classList.add("bounce");
       button.addEventListener("animationend", () => {
         button.classList.remove("bounce");
       }, { once: true });
 
-      // Phát âm thanh click, tránh reset khi đang phát
       if (clickSound) {
         if (clickSound.paused) {
           clickSound.currentTime = 0;
@@ -350,4 +385,5 @@
     });
   </script>
 </body>
-</html>
+    </html>
+    
