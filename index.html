@@ -5,169 +5,165 @@
   <title>Sinh nhật Linh (Sinn)</title>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <style>
-    /* layer mèo nền */
-    #cats-layer {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffe6f0;
+      font-family: 'Patrick Hand', cursive;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
       overflow: hidden;
     }
+
+    /* Các icon mèo chỉ thêm để trang trí, z-index thấp */
     .cat {
       position: absolute;
-      width: 48px; height: 48px;
-      opacity: 0.8;
-    }
-
-    /* nội dung chính */
-    #content {
-      position: relative;
-      z-index: 1;
-      font-family: 'Patrick Hand', cursive;
-      text-align: center;
-      padding: 20px;
-    }
-
-    body {
-      margin: 0; padding: 0;
-      background-color: #ffe6f0;
-      overflow-x: hidden;
+      width: 48px;
+      height: 48px;
+      opacity: 0.5;
+      z-index: 0;
+      pointer-events: none;
     }
 
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
-      margin: 0.2em 0;
+      margin: 0.5em 0;
       text-shadow: 1px 1px 2px #fff;
+      z-index: 1;
+      text-align: center;
     }
 
-    /* khung countdown */
-    .count-frame {
-      display: inline-block;
-      padding: 12px 24px;
-      border: 2px solid #ff1493;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.8);
+    #countdown {
       font-size: 1.8rem;
+      margin: 20px 0;
       color: #ff1493;
-      font-weight: bold;
-      margin-bottom: 20px;
+      z-index: 1;
     }
 
     button {
       padding: 12px 24px;
       font-size: 1.3rem;
       font-weight: bold;
-      background-color: #ff66b2;
+      background-color: #ff66a3;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       box-shadow: 2px 2px 8px #999;
       transition: background-color 0.3s;
+      z-index: 1;
     }
     button:hover {
       background-color: #ff3399;
     }
 
-    /* popup */
+    /* Popup */
     #popup {
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background: #fff0f5;
+      background-color: #fff0f5;
       border: 2px solid #ff66b2;
       border-radius: 12px;
       padding: 30px 40px;
-      font-size: 2rem;
+      font-size: 1.8rem;
       color: #d6336c;
       text-align: center;
-      z-index: 2;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.5s ease;
+      z-index: 2;
     }
     #popup.show {
       opacity: 1;
       pointer-events: auto;
     }
 
-    /* tim rơi */
+    /* Heart fall */
     .heart {
       position: fixed;
-      font-size: 24px;
+      font-size: 20px;
       animation: fall 3s linear forwards;
       z-index: 1;
       pointer-events: none;
     }
     @keyframes fall {
-      0%   { transform: translateY(-20px) scale(1); opacity: 1; }
-      100% { transform: translateY(100vh) scale(1.5); opacity: 0; }
+      0%   { transform: translateY(-20px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- cats layer -->
-  <div id="cats-layer"></div>
-
-  <!-- nội dung chính -->
-  <div id="content">
-    <h1>Sinh nhật Hoàng Linh (Sinn) 🎉🎂</h1>
-    <div class="count-frame" id="countdown"></div>
-    <br>
-    <button onclick="showPopup()">Chúc mừng 🎉🎂</button>
-  </div>
-
-  <!-- popup -->
+  <!-- tiêu đề và nội dung chính -->
+  <h1>Sinh nhật Hoàng Linh (Sinn) 🎉🎂</h1>
+  <div id="countdown"></div>
+  <button onclick="showPopup()">Chúc mừng 🎉🎂</button>
   <div id="popup">Chúc mừng sinh nhật Linhh 🎉🎂</div>
 
+  <!-- thêm 12 icon mèo xung quanh (z-index:0) -->
   <script>
-    /* tạo mèo nền */
-    const catsLayer = document.getElementById('cats-layer');
+    const catUrls = [
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f431.png'
+    ];
     for (let i = 0; i < 12; i++) {
       const img = document.createElement('img');
-      img.src = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f431.png';
+      img.src = catUrls[0];
       img.className = 'cat';
-      img.style.top  = Math.random() * 90 + '%';
-      img.style.left = Math.random() * 90 + '%';
-      catsLayer.appendChild(img);
+      img.style.top  = (5 + Math.random()*90) + '%';
+      img.style.left = (5 + Math.random()*90) + '%';
+      document.body.appendChild(img);
     }
+  </script>
 
-    /* countdown */
+  <!-- countdown logic -->
+  <script>
     function getNextBirthday() {
       const now = new Date();
-      let target = new Date(now.getFullYear(), 7, 4);
-      if (now > target) target.setFullYear(target.getFullYear() + 1);
-      return target;
+      let tgt = new Date(now.getFullYear(), 7, 4);
+      if (now > tgt) tgt.setFullYear(tgt.getFullYear() + 1);
+      return tgt;
     }
+
     function updateCountdown() {
       const now = new Date();
-      const target = getNextBirthday();
-      const isBDay = now.getMonth() === 7 && now.getDate() === 4;
+      const tgt = getNextBirthday();
       const el = document.getElementById('countdown');
-      if (isBDay) {
+
+      // nếu trong ngày 4/8
+      if (now.getMonth() === 7 && now.getDate() === 4) {
         el.textContent = 'Chúc mừng sinh nhật Linh 🎉🎂';
         return;
       }
-      const diff = target - now;
+
+      const diff = tgt - now;
       const days    = Math.floor(diff / (1000*60*60*24));
       const hours   = Math.floor((diff/(1000*60*60))%24);
       const minutes = Math.floor((diff/(1000*60))%60);
       const seconds = Math.floor((diff/1000)%60);
-      el.textContent = `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+
+      el.textContent = 
+        `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
     }
+
     setInterval(updateCountdown, 1000);
     updateCountdown();
+  </script>
 
-    /* popup + hearts */
-    let popupTimeout;
+  <!-- popup + hearts -->
+  <script>
+    let popupTimer;
     function showPopup() {
       const pop = document.getElementById('popup');
       pop.classList.add('show');
-      clearTimeout(popupTimeout);
-      popupTimeout = setTimeout(() => pop.classList.remove('show'), 5000);
+
+      clearTimeout(popupTimer);
+      popupTimer = setTimeout(() => pop.classList.remove('show'), 5000);
 
       for (let i = 0; i < 40; i++) {
         const h = document.createElement('div');
@@ -175,9 +171,10 @@
         h.innerText = '❤️';
         h.style.left = Math.random()*100 + 'vw';
         document.body.appendChild(h);
-        setTimeout(()=> h.remove(), 3000);
+        setTimeout(() => h.remove(), 3000);
       }
     }
   </script>
+
 </body>
 </html>
