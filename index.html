@@ -28,14 +28,14 @@
       z-index: 2;
     }
 
-    /* COUNTDOWN KHUNG */
     .countdown-container {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       margin: 20px 0;
       z-index: 2;
-      flex-wrap: wrap; /* cho phép xuống dòng khi không đủ chỗ */
-      justify-content: center; /* căn giữa hàng */
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 100%;
     }
     .time-box {
       border: 2px solid #ff1493;
@@ -44,20 +44,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 60px;
+      width: 70px;
       background-color: #ffe6f0;
       box-shadow: 0 2px 6px rgba(255, 20, 147, 0.3);
       box-sizing: border-box;
       user-select: none;
     }
-    /* Số lớn */
     .time-box .number {
       font-size: 2rem;
       font-weight: bold;
       color: #d6336c;
       line-height: 1.1;
     }
-    /* Đơn vị thời gian */
     .time-box .label {
       margin-top: 4px;
       font-size: 0.9rem;
@@ -65,15 +63,15 @@
       font-weight: 600;
     }
 
-    /* Media queries cho màn hình nhỏ hơn 480px (điện thoại nhỏ) */
+    /* Responsive */
     @media (max-width: 480px) {
       .countdown-container {
-        gap: 6px;
+        gap: 8px;
         margin: 15px 0;
       }
       .time-box {
-        width: 50px;
-        padding: 8px 10px;
+        width: 60px;
+        padding: 10px 12px;
       }
       .time-box .number {
         font-size: 1.6rem;
@@ -82,16 +80,14 @@
         font-size: 0.75rem;
       }
     }
-    /* Màn hình rất nhỏ, chuyển thành 2 hàng */
     @media (max-width: 350px) {
       .countdown-container {
         gap: 6px;
         margin: 10px 0;
-        flex-wrap: wrap;
         justify-content: center;
       }
       .time-box {
-        width: 45px;
+        width: 50px;
         padding: 6px 8px;
         margin-bottom: 8px;
       }
@@ -160,7 +156,7 @@
       background-size: contain;
       animation: fall 2.5s linear forwards;
       z-index: 1000;
-      pointer-events: none; /* Không chắn click nút */
+      pointer-events: none;
     }
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
@@ -206,7 +202,7 @@
   <script>
     function getNextBirthday() {
       const now = new Date();
-      let target = new Date(now.getFullYear(), 7, 4); // 4/8
+      let target = new Date(now.getFullYear(), 7, 4);
       if (now > target) target.setFullYear(target.getFullYear() + 1);
       return target;
     }
@@ -219,10 +215,10 @@
       const ctn = document.getElementById("countdown");
 
       if (isBirthday) {
-        ctn.style.display = 'none';   // ẩn countdown khi đúng ngày sinh nhật
+        ctn.style.display = 'none';
         return;
       } else {
-        ctn.style.display = 'flex';   // hiện lại nếu không phải ngày sinh nhật
+        ctn.style.display = 'flex';
       }
 
       const diff = target - now;
@@ -259,28 +255,30 @@
         isShowing = false;
         setTimeout(() => {
           if (!isShowing) popup.style.display = "none";
-        }, 500); // 500ms khớp với animation fadeOut
+        }, 500);
       }, 5000);
 
       popup.style.display = "block";
-      createHearts();
+      // Không gọi tạo tim khi bấm nút vì tim rơi luôn chạy nền
     }
 
-    function createHearts() {
-      for (let i = 0; i < 50; i++) {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.top = "-20px";
-        heart.style.animationDuration = (2 + Math.random() * 2) + "s";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
-      }
+    // Tim rơi nền liên tục
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.top = "-20px";
+      heart.style.animationDuration = (2 + Math.random() * 2) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    function startHeartsRain() {
+      setInterval(createHeart, 100);
     }
 
     // Icon mèo nền
     const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
-
     function addCatIconsToBackground(count = 32) {
       document.querySelectorAll('.cat-bg-icon').forEach(e => e.remove());
 
@@ -299,7 +297,7 @@
     addCatIconsToBackground();
     window.addEventListener('resize', () => addCatIconsToBackground(32));
 
-    // Hiệu ứng hoa rơi liên tục vào ngày sinh nhật
+    // Hiệu ứng hoa rơi ngày sinh nhật
     function createFlower() {
       const flower = document.createElement("div");
       flower.textContent = "🌸";
@@ -318,12 +316,14 @@
       }, 30);
       setTimeout(() => flower.remove(), 4700);
     }
-
     function startFlowerRain() {
       setInterval(createFlower, 300);
     }
 
-    window.addEventListener('DOMContentLoaded', function() {
+    // Bắt đầu tim rơi liên tục ngay khi load
+    window.addEventListener('DOMContentLoaded', () => {
+      startHeartsRain();
+
       const now = new Date();
       if (now.getMonth() === 7 && now.getDate() === 4) {
         const popup = document.getElementById("popup");
