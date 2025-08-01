@@ -28,7 +28,7 @@
       z-index: 2;
     }
 
-    /* COUNTDOWN KHUNG */
+    /* Đếm ngược kiểu khung */
     .countdown-container {
       display: flex;
       gap: 12px;
@@ -64,7 +64,7 @@
       font-weight: 600;
     }
 
-    /* Responsive */
+    /* Responsive cho điện thoại */
     @media (max-width: 480px) {
       .countdown-container {
         gap: 8px;
@@ -100,6 +100,7 @@
       }
     }
 
+    /* Nút chúc mừng */
     button {
       background-color: #ff66a3;
       border: none;
@@ -117,6 +118,16 @@
       background-color: #ff3385;
     }
 
+    /* Hiệu ứng bounce cho nút */
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    .bounce {
+      animation: bounce 0.3s ease;
+    }
+
+    /* Popup */
     .popup {
       position: fixed;
       top: 50%;
@@ -149,6 +160,7 @@
       to { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
     }
 
+    /* Tim rơi */
     .heart {
       width: 20px;
       height: 20px;
@@ -179,31 +191,22 @@
 </head>
 <body>
   <h1>Sinh nhật Hoàng Linh (Sin)🎉🎂</h1>
+
   <div id="countdown" class="countdown-container">
-    <div class="time-box">
-      <div class="number" id="days">0</div>
-      <div class="label">Ngày</div>
-    </div>
-    <div class="time-box">
-      <div class="number" id="hours">0</div>
-      <div class="label">Giờ</div>
-    </div>
-    <div class="time-box">
-      <div class="number" id="minutes">0</div>
-      <div class="label">Phút</div>
-    </div>
-    <div class="time-box">
-      <div class="number" id="seconds">0</div>
-      <div class="label">Giây</div>
-    </div>
+    <div class="time-box"><div class="number" id="days">0</div><div class="label">Ngày</div></div>
+    <div class="time-box"><div class="number" id="hours">0</div><div class="label">Giờ</div></div>
+    <div class="time-box"><div class="number" id="minutes">0</div><div class="label">Phút</div></div>
+    <div class="time-box"><div class="number" id="seconds">0</div><div class="label">Giây</div></div>
   </div>
+
   <button onclick="showPopup()">Chúc mừng 🎉🎂</button>
+
   <div class="popup" id="popup">Chúc mừng sinh nhật Linhh 🎉🎂</div>
 
   <script>
     function getNextBirthday() {
       const now = new Date();
-      let target = new Date(now.getFullYear(), 7, 4); // 4/8 (Tháng 7 là tháng 8, vì zero-based)
+      let target = new Date(now.getFullYear(), 7, 4); // Tháng 7 = Tháng 8
       if (now > target) target.setFullYear(target.getFullYear() + 1);
       return target;
     }
@@ -211,15 +214,14 @@
     function updateCountdown() {
       const now = new Date();
       const target = getNextBirthday();
-
       const isBirthday = now.getMonth() === 7 && now.getDate() === 4;
       const ctn = document.getElementById("countdown");
 
       if (isBirthday) {
-        ctn.style.display = 'none';   // ẩn countdown khi đúng ngày sinh nhật
+        ctn.style.display = 'none';
         return;
       } else {
-        ctn.style.display = 'flex';   // hiện lại nếu không phải ngày sinh nhật
+        ctn.style.display = 'flex';
       }
 
       const diff = target - now;
@@ -239,7 +241,7 @@
     let popupTimeout;
     let isShowing = false;
 
-    // Chức năng tim rơi nền
+    // Tạo 1 tim rơi
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -249,11 +251,13 @@
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 3000);
     }
+
+    // Tim rơi nền đi liên tục, tạo tim mỗi 100ms
     function startHeartsRain() {
-      setInterval(createHeart, 100); // Tạo tim rơi nền mỗi 100ms
+      setInterval(createHeart, 100);
     }
 
-    // Tạo nhiều tim rơi khi bấm nút (ví dụ 100 tim rải đều trong 2s)
+    // Tạo nhiều tim rơi rải rác trong 2 giây khi bấm nút (vd 100 tim)
     function createManyHearts(count = 100) {
       for (let i = 0; i < count; i++) {
         const delay = Math.random() * 2000;
@@ -261,9 +265,52 @@
       }
     }
 
-    // Hàm hiển thị popup và hiệu ứng tim rơi nhiều
+    // Hiệu ứng hoa rơi khi đúng ngày sinh nhật
+    function createFlower() {
+      const flower = document.createElement("div");
+      flower.textContent = "🌸";
+      flower.style.position = "fixed";
+      flower.style.left = Math.random() * 100 + "vw";
+      flower.style.top = "-40px";
+      flower.style.fontSize = (28 + Math.random() * 24) + "px";
+      flower.style.opacity = 0.82;
+      flower.style.pointerEvents = "none";
+      flower.style.transition = "transform 4.5s linear, opacity 4.5s linear";
+      document.body.appendChild(flower);
+
+      setTimeout(() => {
+        flower.style.transform = `translateY(${window.innerHeight + 60}px) rotate(${Math.random() * 50 - 25}deg)`;
+        flower.style.opacity = "0";
+      }, 30);
+      setTimeout(() => flower.remove(), 4700);
+    }
+
+    function startFlowerRain() {
+      setInterval(createFlower, 300);
+    }
+
+    // Thêm icon mèo nền
+    const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
+
+    function addCatIconsToBackground(count = 32) {
+      document.querySelectorAll('.cat-bg-icon').forEach(e => e.remove());
+      const body = document.body;
+      const { innerWidth: ww, innerHeight: wh } = window;
+      for (let i = 0; i < count; i++) {
+        const cat = document.createElement('img');
+        cat.className = 'cat-bg-icon';
+        cat.src = catIconURL;
+        cat.style.left = Math.random() * (ww - 48) + 'px';
+        cat.style.top = Math.random() * (wh - 48) + 'px';
+        cat.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+        body.appendChild(cat);
+      }
+    }
+
+    // Hàm hiển thị popup + tim rơi nhiều + hiệu ứng bounce nút
     function showPopup() {
       const popup = document.getElementById("popup");
+      const button = document.querySelector("button");
       if (!isShowing) {
         popup.classList.remove("hide");
         popup.classList.add("show");
@@ -280,53 +327,21 @@
       }, 5000);
       popup.style.display = "block";
 
-      // Tạo thêm tim rơi nhiều hơn khi bấm nút
+      // Tạo thêm nhiều tim khi bấm nút
       createManyHearts(100);
-    }
 
-    // Icon mèo nền
-    const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
-    function addCatIconsToBackground(count = 32) {
-      document.querySelectorAll('.cat-bg-icon').forEach(e => e.remove());
-      const body = document.body;
-      const { innerWidth: ww, innerHeight: wh } = window;
-      for (let i = 0; i < count; i++) {
-        const cat = document.createElement('img');
-        cat.className = 'cat-bg-icon';
-        cat.src = catIconURL;
-        cat.style.left = Math.random() * (ww - 48) + 'px';
-        cat.style.top = Math.random() * (wh - 48) + 'px';
-        cat.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
-        body.appendChild(cat);
-      }
-    }
-    addCatIconsToBackground();
-    window.addEventListener('resize', () => addCatIconsToBackground(32));
-
-    // Hiệu ứng hoa rơi khi đúng ngày sinh nhật 4/8
-    function createFlower() {
-      const flower = document.createElement("div");
-      flower.textContent = "🌸";
-      flower.style.position = "fixed";
-      flower.style.left = Math.random() * 100 + "vw";
-      flower.style.top = "-40px";
-      flower.style.fontSize = (28 + Math.random() * 24) + "px";
-      flower.style.opacity = 0.82;
-      flower.style.pointerEvents = "none";
-      flower.style.transition = "transform 4.5s linear, opacity 4.5s linear";
-      document.body.appendChild(flower);
-      setTimeout(() => {
-        flower.style.transform = `translateY(${window.innerHeight + 60}px) rotate(${Math.random() * 50 - 25}deg)`;
-        flower.style.opacity = "0";
-      }, 30);
-      setTimeout(() => flower.remove(), 4700);
-    }
-    function startFlowerRain() {
-      setInterval(createFlower, 300);
+      // Hiệu ứng bounce nút
+      button.classList.add("bounce");
+      button.addEventListener("animationend", () => {
+        button.classList.remove("bounce");
+      }, { once: true });
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      startHeartsRain(); // bắt đầu tim rơi nền
+      startHeartsRain();
+      addCatIconsToBackground();
+
+      window.addEventListener('resize', () => addCatIconsToBackground(32));
 
       const now = new Date();
       if (now.getMonth() === 7 && now.getDate() === 4) {
