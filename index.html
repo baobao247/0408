@@ -98,6 +98,7 @@
       background-size: contain;
       animation: fall 2.5s linear forwards;
       z-index: 1000;
+      pointer-events: none; /* Thêm dòng này để không chặn click */
     }
 
     @keyframes fall {
@@ -199,7 +200,6 @@
     const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
 
     function addCatIconsToBackground(count = 32) {
-      // Xoá icon mèo cũ nếu có
       document.querySelectorAll('.cat-bg-icon').forEach(e => e.remove());
 
       const body = document.body;
