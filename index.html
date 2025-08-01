@@ -174,8 +174,12 @@
         popup.classList.remove("show");
         popup.classList.add("hide");
         isShowing = false;
+        setTimeout(() => {
+          if (!isShowing) popup.style.display = "none";
+        }, 500); // 500ms khớp với animation fadeOut
       }, 5000);
 
+      popup.style.display = "block";
       createHearts();
     }
 
@@ -191,7 +195,7 @@
       }
     }
 
-    // URL SVG mèo dễ thương miễn phí
+    // Icon mèo nền
     const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
 
     function addCatIconsToBackground(count = 32) {
@@ -205,18 +209,51 @@
         cat.className = 'cat-bg-icon';
         cat.src = catIconURL;
 
-        // Ngẫu nhiên vị trí trong màn hình trừ biên 48px
         cat.style.left = Math.random() * (ww - 48) + 'px';
         cat.style.top = Math.random() * (wh - 48) + 'px';
-        // Xoay nhẹ cho siêu dễ thương
         cat.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
         body.appendChild(cat);
       }
     }
-
-    // Gọi hàm khi load trang
     addCatIconsToBackground();
     window.addEventListener('resize', () => addCatIconsToBackground(32));
+
+    // Hiệu ứng hoa rơi liên tục vào ngày sinh nhật
+    function createFlower() {
+      const flower = document.createElement("div");
+      flower.textContent = "🌸";
+      flower.style.position = "fixed";
+      flower.style.left = Math.random() * 100 + "vw";
+      flower.style.top = "-40px";
+      flower.style.fontSize = (28 + Math.random() * 24) + "px";
+      flower.style.opacity = 0.82;
+      flower.style.pointerEvents = "none";
+      flower.style.transition = "transform 4.5s linear, opacity 4.5s linear";
+      document.body.appendChild(flower);
+
+      setTimeout(() => {
+        flower.style.transform = `translateY(${window.innerHeight + 60}px) rotate(${Math.random() * 50 - 25}deg)`;
+        flower.style.opacity = "0";
+      }, 30);
+      setTimeout(() => flower.remove(), 4700);
+    }
+
+    function startFlowerRain() {
+      setInterval(createFlower, 300);
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      const now = new Date();
+      if (now.getMonth() === 7 && now.getDate() === 4) {
+        const popup = document.getElementById("popup");
+        popup.textContent = "Chúc mừng sinh nhật Linhh 🎉🌸🎂";
+        popup.classList.remove("hide");
+        popup.classList.add("show");
+        popup.style.display = "block";
+        isShowing = true;
+        startFlowerRain();
+      }
+    });
   </script>
 </body>
 </html>
