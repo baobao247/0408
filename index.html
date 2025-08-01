@@ -28,6 +28,7 @@
       z-index: 2;
     }
 
+    /* COUNTDOWN KHUNG */
     .countdown-container {
       display: flex;
       gap: 12px;
@@ -156,7 +157,7 @@
       background-size: contain;
       animation: fall 2.5s linear forwards;
       z-index: 1000;
-      pointer-events: none;
+      pointer-events: none; /* Không chắn click */
     }
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
@@ -202,7 +203,7 @@
   <script>
     function getNextBirthday() {
       const now = new Date();
-      let target = new Date(now.getFullYear(), 7, 4);
+      let target = new Date(now.getFullYear(), 7, 4); // 4/8 (Tháng 7 là tháng 8, vì zero-based)
       if (now > target) target.setFullYear(target.getFullYear() + 1);
       return target;
     }
@@ -215,10 +216,10 @@
       const ctn = document.getElementById("countdown");
 
       if (isBirthday) {
-        ctn.style.display = 'none';
+        ctn.style.display = 'none';   // ẩn countdown khi đúng ngày sinh nhật
         return;
       } else {
-        ctn.style.display = 'flex';
+        ctn.style.display = 'flex';   // hiện lại nếu không phải ngày sinh nhật
       }
 
       const diff = target - now;
@@ -232,37 +233,13 @@
       document.getElementById("minutes").textContent = minutes;
       document.getElementById("seconds").textContent = seconds;
     }
-
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
     let popupTimeout;
     let isShowing = false;
 
-    function showPopup() {
-      const popup = document.getElementById("popup");
-
-      if (!isShowing) {
-        popup.classList.remove("hide");
-        popup.classList.add("show");
-        isShowing = true;
-      }
-
-      clearTimeout(popupTimeout);
-      popupTimeout = setTimeout(() => {
-        popup.classList.remove("show");
-        popup.classList.add("hide");
-        isShowing = false;
-        setTimeout(() => {
-          if (!isShowing) popup.style.display = "none";
-        }, 500);
-      }, 5000);
-
-      popup.style.display = "block";
-      // Không gọi tạo tim khi bấm nút vì tim rơi luôn chạy nền
-    }
-
-    // Tim rơi nền liên tục
+    // Chức năng tim rơi nền
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -272,16 +249,45 @@
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 3000);
     }
-
     function startHeartsRain() {
-      setInterval(createHeart, 100);
+      setInterval(createHeart, 100); // Tạo tim rơi nền mỗi 100ms
+    }
+
+    // Tạo nhiều tim rơi khi bấm nút (ví dụ 100 tim rải đều trong 2s)
+    function createManyHearts(count = 100) {
+      for (let i = 0; i < count; i++) {
+        const delay = Math.random() * 2000;
+        setTimeout(() => createHeart(), delay);
+      }
+    }
+
+    // Hàm hiển thị popup và hiệu ứng tim rơi nhiều
+    function showPopup() {
+      const popup = document.getElementById("popup");
+      if (!isShowing) {
+        popup.classList.remove("hide");
+        popup.classList.add("show");
+        isShowing = true;
+      }
+      clearTimeout(popupTimeout);
+      popupTimeout = setTimeout(() => {
+        popup.classList.remove("show");
+        popup.classList.add("hide");
+        isShowing = false;
+        setTimeout(() => {
+          if (!isShowing) popup.style.display = "none";
+        }, 500);
+      }, 5000);
+      popup.style.display = "block";
+
+      // Tạo thêm tim rơi nhiều hơn khi bấm nút
+      createManyHearts(100);
     }
 
     // Icon mèo nền
     const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
     function addCatIconsToBackground(count = 32) {
       document.querySelectorAll('.cat-bg-icon').forEach(e => e.remove());
-
       const body = document.body;
       const { innerWidth: ww, innerHeight: wh } = window;
       for (let i = 0; i < count; i++) {
@@ -297,7 +303,7 @@
     addCatIconsToBackground();
     window.addEventListener('resize', () => addCatIconsToBackground(32));
 
-    // Hiệu ứng hoa rơi ngày sinh nhật
+    // Hiệu ứng hoa rơi khi đúng ngày sinh nhật 4/8
     function createFlower() {
       const flower = document.createElement("div");
       flower.textContent = "🌸";
@@ -309,7 +315,6 @@
       flower.style.pointerEvents = "none";
       flower.style.transition = "transform 4.5s linear, opacity 4.5s linear";
       document.body.appendChild(flower);
-
       setTimeout(() => {
         flower.style.transform = `translateY(${window.innerHeight + 60}px) rotate(${Math.random() * 50 - 25}deg)`;
         flower.style.opacity = "0";
@@ -320,9 +325,8 @@
       setInterval(createFlower, 300);
     }
 
-    // Bắt đầu tim rơi liên tục ngay khi load
     window.addEventListener('DOMContentLoaded', () => {
-      startHeartsRain();
+      startHeartsRain(); // bắt đầu tim rơi nền
 
       const now = new Date();
       if (now.getMonth() === 7 && now.getDate() === 4) {
