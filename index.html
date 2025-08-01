@@ -6,6 +6,7 @@
   <title>Sinh nhật Linh (Sinn)</title>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet" />
   <style>
+    /* Reset và body */
     body {
       margin: 0;
       padding: 0;
@@ -19,6 +20,8 @@
       overflow-x: hidden;
       position: relative;
     }
+
+    /* Tiêu đề */
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
@@ -28,59 +31,43 @@
       z-index: 2;
     }
 
-    /* Đếm ngược kiểu khung */
+    /* Đếm ngược kiểu khung tối ưu responsive */
     .countdown-container {
       display: flex;
-      gap: 12px;
-      margin: 20px 0;
-      z-index: 2;
       flex-wrap: wrap;
       justify-content: center;
-      max-width: 100%;
+      gap: clamp(6px, 2vw, 12px);
+      margin: 20px auto;
+      max-width: 400px;
+      z-index: 2;
     }
     .time-box {
       border: 2px solid #ff1493;
       border-radius: 12px;
-      padding: 12px 14px;
+      padding: clamp(6px, 2vw, 12px) clamp(8px, 3vw, 14px);
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 70px;
+      width: clamp(50px, 12vw, 70px);
       background-color: #ffe6f0;
       box-shadow: 0 2px 6px rgba(255, 20, 147, 0.3);
       box-sizing: border-box;
       user-select: none;
     }
     .time-box .number {
-      font-size: 2rem;
+      font-size: clamp(1.4rem, 4vw, 2rem);
       font-weight: bold;
       color: #d6336c;
       line-height: 1.1;
     }
     .time-box .label {
       margin-top: 4px;
-      font-size: 0.9rem;
+      font-size: clamp(0.7rem, 2vw, 0.9rem);
       color: #ff1493;
       font-weight: 600;
     }
 
-    /* Responsive cho điện thoại */
-    @media (max-width: 480px) {
-      .countdown-container {
-        gap: 8px;
-        margin: 15px 0;
-      }
-      .time-box {
-        width: 60px;
-        padding: 10px 12px;
-      }
-      .time-box .number {
-        font-size: 1.6rem;
-      }
-      .time-box .label {
-        font-size: 0.75rem;
-      }
-    }
+    /* Responsive phụ cho màn hình rất nhỏ */
     @media (max-width: 350px) {
       .countdown-container {
         gap: 6px;
@@ -88,7 +75,7 @@
         justify-content: center;
       }
       .time-box {
-        width: 50px;
+        width: 45px;
         padding: 6px 8px;
         margin-bottom: 8px;
       }
@@ -100,7 +87,7 @@
       }
     }
 
-    /* Nút chúc mừng */
+    /* Nút chúc mừng và hiệu ứng bounce */
     button {
       background-color: #ff66a3;
       border: none;
@@ -117,8 +104,6 @@
     button:hover {
       background-color: #ff3385;
     }
-
-    /* Hiệu ứng bounce cho nút */
     @keyframes bounce {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.2); }
@@ -127,7 +112,7 @@
       animation: bounce 0.3s ease;
     }
 
-    /* Popup */
+    /* Popup hiển thị lời chúc */
     .popup {
       position: fixed;
       top: 50%;
@@ -169,7 +154,7 @@
       background-size: contain;
       animation: fall 2.5s linear forwards;
       z-index: 1000;
-      pointer-events: none; /* Không chắn click */
+      pointer-events: none; /* không cản sự kiện click */
     }
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
@@ -206,7 +191,7 @@
   <script>
     function getNextBirthday() {
       const now = new Date();
-      let target = new Date(now.getFullYear(), 7, 4); // Tháng 7 = Tháng 8
+      let target = new Date(now.getFullYear(), 7, 4); // Tháng 7 = Tháng 8 (0-based)
       if (now > target) target.setFullYear(target.getFullYear() + 1);
       return target;
     }
@@ -220,9 +205,8 @@
       if (isBirthday) {
         ctn.style.display = 'none';
         return;
-      } else {
-        ctn.style.display = 'flex';
       }
+      ctn.style.display = 'flex';
 
       const diff = target - now;
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -241,7 +225,7 @@
     let popupTimeout;
     let isShowing = false;
 
-    // Tạo 1 tim rơi
+    // Tạo một tim rơi đơn lẻ
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -252,12 +236,12 @@
       setTimeout(() => heart.remove(), 3000);
     }
 
-    // Tim rơi nền đi liên tục, tạo tim mỗi 100ms
+    // Tim nền rơi liên tục, tạo tim mỗi 100ms
     function startHeartsRain() {
       setInterval(createHeart, 100);
     }
 
-    // Tạo nhiều tim rơi rải rác trong 2 giây khi bấm nút (vd 100 tim)
+    // Tạo nhiều tim rơi trong vòng 2s, mặc định 100 tim
     function createManyHearts(count = 100) {
       for (let i = 0; i < count; i++) {
         const delay = Math.random() * 2000;
@@ -265,7 +249,7 @@
       }
     }
 
-    // Hiệu ứng hoa rơi khi đúng ngày sinh nhật
+    // Hiệu ứng hoa rơi ngày sinh nhật
     function createFlower() {
       const flower = document.createElement("div");
       flower.textContent = "🌸";
@@ -289,9 +273,8 @@
       setInterval(createFlower, 300);
     }
 
-    // Thêm icon mèo nền
+    // Icon mèo nền mờ rải đều
     const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
-
     function addCatIconsToBackground(count = 32) {
       document.querySelectorAll('.cat-bg-icon').forEach(e => e.remove());
       const body = document.body;
@@ -307,10 +290,10 @@
       }
     }
 
-    // Hàm hiển thị popup + tim rơi nhiều + hiệu ứng bounce nút
     function showPopup() {
       const popup = document.getElementById("popup");
       const button = document.querySelector("button");
+      
       if (!isShowing) {
         popup.classList.remove("hide");
         popup.classList.add("show");
@@ -327,10 +310,10 @@
       }, 5000);
       popup.style.display = "block";
 
-      // Tạo thêm nhiều tim khi bấm nút
+      // Tạo thêm tim nhiều hơn khi bấm nút
       createManyHearts(100);
 
-      // Hiệu ứng bounce nút
+      // Hiệu ứng bounce cho nút
       button.classList.add("bounce");
       button.addEventListener("animationend", () => {
         button.classList.remove("bounce");
@@ -340,7 +323,6 @@
     window.addEventListener('DOMContentLoaded', () => {
       startHeartsRain();
       addCatIconsToBackground();
-
       window.addEventListener('resize', () => addCatIconsToBackground(32));
 
       const now = new Date();
