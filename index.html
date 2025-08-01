@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sinh nhật Linh (Sinn)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet" />
   <style>
     body {
       margin: 0;
@@ -15,166 +16,207 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      overflow-x: hidden;
       position: relative;
-      overflow: hidden;
-    }
-
-    /* Các icon mèo chỉ thêm để trang trí, z-index thấp */
-    .cat {
-      position: absolute;
-      width: 48px;
-      height: 48px;
-      opacity: 0.5;
-      z-index: 0;
-      pointer-events: none;
     }
 
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
-      margin: 0.5em 0;
+      margin: 0.2em 0;
       text-shadow: 1px 1px 2px #fff;
-      z-index: 1;
       text-align: center;
+      z-index: 2;
     }
 
     #countdown {
       font-size: 1.8rem;
       margin: 20px 0;
       color: #ff1493;
-      z-index: 1;
+      z-index: 2;
     }
 
     button {
-      padding: 12px 24px;
-      font-size: 1.3rem;
-      font-weight: bold;
       background-color: #ff66a3;
-      color: white;
       border: none;
-      border-radius: 8px;
+      color: white;
+      padding: 12px 20px;
+      font-size: 1.3rem;
+      border-radius: 12px;
       cursor: pointer;
+      font-weight: bold;
       box-shadow: 2px 2px 8px #999;
       transition: background-color 0.3s;
-      z-index: 1;
-    }
-    button:hover {
-      background-color: #ff3399;
-    }
-
-    /* Popup */
-    #popup {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #fff0f5;
-      border: 2px solid #ff66b2;
-      border-radius: 12px;
-      padding: 30px 40px;
-      font-size: 1.8rem;
-      color: #d6336c;
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
       z-index: 2;
     }
-    #popup.show {
-      opacity: 1;
-      pointer-events: auto;
+
+    button:hover {
+      background-color: #ff3385;
     }
 
-    /* Heart fall */
-    .heart {
+    .popup {
       position: fixed;
-      font-size: 20px;
-      animation: fall 3s linear forwards;
-      z-index: 1;
-      pointer-events: none;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff0f5;
+      color: #d6336c;
+      border: 2px solid #ff99cc;
+      padding: 25px;
+      border-radius: 20px;
+      font-size: 1.8rem;
+      display: none;
+      z-index: 1001;
+      text-align: center;
+      opacity: 0;
     }
+
+    .popup.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .popup.hide {
+      animation: fadeOut 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      to { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    }
+
+    .heart {
+      width: 20px;
+      height: 20px;
+      position: fixed;
+      background: url('https://twemoji.maxcdn.com/v/latest/svg/2764.svg') no-repeat center;
+      background-size: contain;
+      animation: fall 2.5s linear forwards;
+      z-index: 1000;
+    }
+
     @keyframes fall {
-      0%   { transform: translateY(-20px); opacity: 1; }
+      0% { transform: translateY(0); opacity: 1; }
       100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    /* Icon mèo nền */
+    .cat-bg-icon {
+      position: absolute;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      opacity: 0.14;     /* mờ để không che nội dung */
+      pointer-events: none;
+      user-select: none;
+      transition: transform 0.5s;
     }
   </style>
 </head>
 <body>
-
-  <!-- tiêu đề và nội dung chính -->
-  <h1>Sinh nhật Hoàng Linh (Sinn) 🎉🎂</h1>
+  <h1>Sinh nhật Hoàng Linh (Sin)🎉🎂</h1>
   <div id="countdown"></div>
   <button onclick="showPopup()">Chúc mừng 🎉🎂</button>
-  <div id="popup">Chúc mừng sinh nhật Linhh 🎉🎂</div>
+  <div class="popup" id="popup">Chúc mừng sinh nhật Linhh 🎉🎂</div>
 
-  <!-- thêm 12 icon mèo xung quanh (z-index:0) -->
-  <script>
-    const catUrls = [
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f431.png'
-    ];
-    for (let i = 0; i < 12; i++) {
-      const img = document.createElement('img');
-      img.src = catUrls[0];
-      img.className = 'cat';
-      img.style.top  = (5 + Math.random()*90) + '%';
-      img.style.left = (5 + Math.random()*90) + '%';
-      document.body.appendChild(img);
-    }
-  </script>
-
-  <!-- countdown logic -->
   <script>
     function getNextBirthday() {
       const now = new Date();
-      let tgt = new Date(now.getFullYear(), 7, 4);
-      if (now > tgt) tgt.setFullYear(tgt.getFullYear() + 1);
-      return tgt;
+      let target = new Date(now.getFullYear(), 7, 4); // 4/8
+      if (now > target) target.setFullYear(target.getFullYear() + 1);
+      return target;
     }
 
     function updateCountdown() {
       const now = new Date();
-      const tgt = getNextBirthday();
-      const el = document.getElementById('countdown');
+      const target = getNextBirthday();
 
-      // nếu trong ngày 4/8
-      if (now.getMonth() === 7 && now.getDate() === 4) {
-        el.textContent = 'Chúc mừng sinh nhật Linh 🎉🎂';
+      const isBirthday = now.getMonth() === 7 && now.getDate() === 4;
+      const countdown = document.getElementById("countdown");
+
+      if (isBirthday) {
+        countdown.textContent = "Chúc mừng sinh nhật Linh 🎉🎂";
         return;
       }
 
-      const diff = tgt - now;
-      const days    = Math.floor(diff / (1000*60*60*24));
-      const hours   = Math.floor((diff/(1000*60*60))%24);
-      const minutes = Math.floor((diff/(1000*60))%60);
-      const seconds = Math.floor((diff/1000)%60);
+      const diff = target - now;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
-      el.textContent = 
+      countdown.textContent =
         `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
     }
 
     setInterval(updateCountdown, 1000);
     updateCountdown();
-  </script>
 
-  <!-- popup + hearts -->
-  <script>
-    let popupTimer;
+    let popupTimeout;
+    let isShowing = false;
+
     function showPopup() {
-      const pop = document.getElementById('popup');
-      pop.classList.add('show');
+      const popup = document.getElementById("popup");
 
-      clearTimeout(popupTimer);
-      popupTimer = setTimeout(() => pop.classList.remove('show'), 5000);
+      if (!isShowing) {
+        popup.classList.remove("hide");
+        popup.classList.add("show");
+        isShowing = true;
+      }
 
-      for (let i = 0; i < 40; i++) {
-        const h = document.createElement('div');
-        h.className = 'heart';
-        h.innerText = '❤️';
-        h.style.left = Math.random()*100 + 'vw';
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 3000);
+      clearTimeout(popupTimeout);
+      popupTimeout = setTimeout(() => {
+        popup.classList.remove("show");
+        popup.classList.add("hide");
+        isShowing = false;
+      }, 5000);
+
+      createHearts();
+    }
+
+    function createHearts() {
+      for (let i = 0; i < 50; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "-20px";
+        heart.style.animationDuration = (2 + Math.random() * 2) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
       }
     }
-  </script>
 
+    // URL SVG mèo dễ thương miễn phí
+    const catIconURL = 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f431.svg';
+
+    function addCatIconsToBackground(count = 32) {
+      // Xoá icon mèo cũ nếu có
+      document.querySelectorAll('.cat-bg-icon').forEach(e => e.remove());
+
+      const body = document.body;
+      const { innerWidth: ww, innerHeight: wh } = window;
+      for (let i = 0; i < count; i++) {
+        const cat = document.createElement('img');
+        cat.className = 'cat-bg-icon';
+        cat.src = catIconURL;
+
+        // Ngẫu nhiên vị trí trong màn hình trừ biên 48px
+        cat.style.left = Math.random() * (ww - 48) + 'px';
+        cat.style.top = Math.random() * (wh - 48) + 'px';
+        // Xoay nhẹ cho siêu dễ thương
+        cat.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+        body.appendChild(cat);
+      }
+    }
+
+    // Gọi hàm khi load trang
+    addCatIconsToBackground();
+    window.addEventListener('resize', () => addCatIconsToBackground(32));
+  </script>
 </body>
 </html>
