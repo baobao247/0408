@@ -188,10 +188,13 @@
 
   <div class="popup" id="popup">Chúc mừng sinh nhật Linhh 🎉🎂</div>
 
+  <!-- Audio clip dùng âm thanh bấm nút -->
+  <audio id="clickSound" src="https://github.com/baobao247/0408/raw/refs/heads/main/happy-birthday-to-you-bossa-nova-style-arrangement-21399.mp3" preload="auto"></audio>
+
   <script>
     function getNextBirthday() {
       const now = new Date();
-      let target = new Date(now.getFullYear(), 7, 4); // Tháng 7 = Tháng 8 (0-based)
+      let target = new Date(now.getFullYear(), 7, 4); // Tháng 7 = tháng 8 (0-based)
       if (now > target) target.setFullYear(target.getFullYear() + 1);
       return target;
     }
@@ -293,6 +296,7 @@
     function showPopup() {
       const popup = document.getElementById("popup");
       const button = document.querySelector("button");
+      const clickSound = document.getElementById("clickSound");
       
       if (!isShowing) {
         popup.classList.remove("hide");
@@ -318,6 +322,12 @@
       button.addEventListener("animationend", () => {
         button.classList.remove("bounce");
       }, { once: true });
+
+      // Phát âm thanh click
+      if (clickSound) {
+        clickSound.currentTime = 0;
+        clickSound.play();
+      }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -338,4 +348,5 @@
     });
   </script>
 </body>
-</html>
+  </html>
+  
