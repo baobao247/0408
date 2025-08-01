@@ -21,23 +21,35 @@
       position: relative;
     }
 
+    /* Đóng gói tiêu đề và ngày sinh trong container để căn chỉnh khoảng cách */
+    .title-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px; /* Khoảng cách đều giữa dòng tiêu đề và ngày sinh */
+      margin-top: 0;
+      margin-bottom: 0;
+      z-index: 2;
+    }
+
     /* Tiêu đề */
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       color: #d6336c;
-      margin: 0.2em 0 0 0;
+      margin: 0;
       text-shadow: 1px 1px 2px #fff;
       text-align: center;
-      z-index: 2;
+      user-select: none;
     }
+
+    /* Dòng ngày sinh */
     #birthday-date {
       color: #d6336c;
       font-size: 1.2rem;
-      margin-top: -6px;
       font-family: 'Patrick Hand', cursive;
       text-align: center;
       user-select: none;
-      z-index: 2;
+      margin: 0;  /* margin 0 để tránh khoảng cách thừa */
     }
 
     /* Đếm ngược kiểu khung tối ưu responsive */
@@ -184,8 +196,10 @@
   </style>
 </head>
 <body>
-  <h1>Sinh nhật Hoàng Linh (Sin)🎉🎂</h1>
-  <p id="birthday-date">...</p>
+  <div class="title-container">
+    <h1>Sinh nhật Hoàng Linh (Sin)🎉🎂</h1>
+    <p id="birthday-date">...</p>
+  </div>
 
   <div id="countdown" class="countdown-container">
     <div class="time-box"><div class="number" id="days">0</div><div class="label">Ngày</div></div>
@@ -385,5 +399,4 @@
     });
   </script>
 </body>
-    </html>
-    
+</html>
