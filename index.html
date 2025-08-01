@@ -154,7 +154,7 @@
       background-size: contain;
       animation: fall 2.5s linear forwards;
       z-index: 1000;
-      pointer-events: none; /* không cản sự kiện click */
+      pointer-events: none;
     }
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
@@ -194,7 +194,7 @@
   <script>
     function getNextBirthday() {
       const now = new Date();
-      let target = new Date(now.getFullYear(), 7, 4); // Tháng 7 = tháng 8 (0-based)
+      let target = new Date(now.getFullYear(), 7, 4);
       if (now > target) target.setFullYear(target.getFullYear() + 1);
       return target;
     }
@@ -228,7 +228,7 @@
     let popupTimeout;
     let isShowing = false;
 
-    // Tạo một tim rơi đơn lẻ
+    // Tạo 1 tim rơi đơn lẻ
     function createHeart() {
       const heart = document.createElement("div");
       heart.classList.add("heart");
@@ -244,7 +244,7 @@
       setInterval(createHeart, 100);
     }
 
-    // Tạo nhiều tim rơi trong vòng 2s, mặc định 100 tim
+    // Tạo nhiều tim trong 2s, mặc định 100 tim
     function createManyHearts(count = 100) {
       for (let i = 0; i < count; i++) {
         const delay = Math.random() * 2000;
@@ -297,7 +297,7 @@
       const popup = document.getElementById("popup");
       const button = document.querySelector("button");
       const clickSound = document.getElementById("clickSound");
-      
+
       if (!isShowing) {
         popup.classList.remove("hide");
         popup.classList.add("show");
@@ -314,19 +314,21 @@
       }, 5000);
       popup.style.display = "block";
 
-      // Tạo thêm tim nhiều hơn khi bấm nút
+      // Tạo nhiều tim rơi khi bấm nút
       createManyHearts(100);
 
-      // Hiệu ứng bounce cho nút
+      // Hiệu ứng bounce nút
       button.classList.add("bounce");
       button.addEventListener("animationend", () => {
         button.classList.remove("bounce");
       }, { once: true });
 
-      // Phát âm thanh click
+      // Phát âm thanh click, tránh reset khi đang phát
       if (clickSound) {
-        clickSound.currentTime = 0;
-        clickSound.play();
+        if (clickSound.paused) {
+          clickSound.currentTime = 0;
+          clickSound.play();
+        }
       }
     }
 
@@ -348,5 +350,4 @@
     });
   </script>
 </body>
-  </html>
-  
+</html>
